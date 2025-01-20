@@ -246,7 +246,7 @@
 				pano: $map!.places[round],
 				visible: true,
 				disableDefaultUI: true,
-				linksControl: true,
+				linksControl: false,
 				motionTracking: false,
 				panControlOptions: {
 					position: google.maps.ControlPosition.TOP_RIGHT
