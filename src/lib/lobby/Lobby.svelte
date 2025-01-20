@@ -1,33 +1,34 @@
 <script lang="ts">
-	import UserRound from "lucide-svelte/icons/user-round";
-	import Check from "lucide-svelte/icons/check";
-	import { Button } from "$lib/components/ui/button/index.js";
-	import * as Card from "$lib/components/ui/card/index.js";
+	import UserRound from 'lucide-svelte/icons/user-round';
+	import Check from 'lucide-svelte/icons/check';
+	import { Button } from '$lib/components/ui/button/index.js';
+	import * as Card from '$lib/components/ui/card/index.js';
 	import { onDestroy, onMount } from 'svelte';
-	import { pb } from "$lib/pocketbase";
-	import { user } from "$lib/auth/auth";
-	import { game } from '$lib/game/game';
+	import { pb } from '$lib/pocketbase';
+	import { user } from '$lib/auth/auth';
+	import { game, resetUsers } from '$lib/game/game';
 	import type { RecordModel } from 'pocketbase';
 
-	let players:RecordModel[]= []
+	let players: RecordModel[] = [];
 	let unsubscribeGame: () => void;
 
 	async function getPlayers() {
-		return (await pb.collection('game').getOne($game!.id, {
-			expand: 'user_via_game',
-			fields: 'expand'
-		})).expand?.user_via_game
+		return (
+			await pb.collection('game').getOne($game!.id, {
+				expand: 'user_via_game',
+				fields: 'expand'
+			})
+		).expand?.user_via_game;
 	}
 	onMount(async () => {
 		unsubscribeGame = game.subscribe(async () => {
-			players = await getPlayers()
-		})
-		players = await getPlayers()
-	})
+			players = await getPlayers();
+		});
+		players = await getPlayers();
+	});
 	onDestroy(() => {
-		if(typeof unsubscribeGame === 'function')
-			unsubscribeGame();
-	})
+		if (typeof unsubscribeGame === 'function') unsubscribeGame();
+	});
 </script>
 
 <Card.Root class="w-full">
@@ -40,9 +41,7 @@
 			<UserRound />
 			<div class="flex-1 space-y-1">
 				<p class="text-sm font-medium leading-none">Participants ({players.length})</p>
-				<p class="text-muted-foreground text-sm">
-					RPZ la team
-				</p>
+				<p class="text-sm text-muted-foreground">RPZ la team</p>
 			</div>
 		</div>
 		<div>
@@ -60,16 +59,25 @@
 	</Card.Content>
 	<Card.Footer class="flex flex-col gap-2">
 		{#if $user?.isAdmin}
-			<Button onclick={() => {
-				pb.collection('game').update($game? $game.id : '', {inProgress: 'true', roundStart: (new Date()).toJSON()})
-			}} class="w-full">
+			<Button
+				onclick={async () => {
+					await resetUsers();
+					pb.collection('game').update($game ? $game.id : '', {
+						inProgress: 'true',
+						roundStart: new Date().toJSON()
+					});
+				}}
+				class="w-full"
+			>
 				<Check class="mr-2 h-4 w-4" /> Lancer la partie
 			</Button>
-
-	{/if}
-		<Button onclick={() => {
-			pb.collection('user').update($user? $user.id : '', {game: ''})
-		}} class="w-full">
+		{/if}
+		<Button
+			onclick={() => {
+				pb.collection('user').update($user ? $user.id : '', { game: '' });
+			}}
+			class="w-full"
+		>
 			<Check class="mr-2 h-4 w-4" /> Quitter la partie
 		</Button>
 	</Card.Footer>

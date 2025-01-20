@@ -10,35 +10,33 @@
 	let failed = false;
 </script>
 
-<Card.Root class="w-full">
+<Card.Root class="mx-auto max-w-sm mt-[25%]">
 	<Card.Header>
-		<Card.Title>Authentification</Card.Title>
+		<Card.Title class="text-2xl">Authentification</Card.Title>
 		<Card.Description>Veuillez vous connecter avec les identifiants qui vous ont été fournis</Card.Description>
 	</Card.Header>
 	<Card.Content>
-		<form>
-			<div class="grid w-full items-center gap-4">
-				<div class="flex flex-col space-y-1.5">
-					<Label for="name">Username</Label>
-					<Input id="name" bind:value={username} placeholder="Votre identifiant" />
-				</div>
-				<div class="flex flex-col space-y-1.5">
-					<Label for="name">Password</Label>
-					<Input id="name" bind:value={password} placeholder="Votre mot de passe" />
-				</div>
+		<div class="grid gap-4">
+			<div class="grid gap-2">
+				<Label for="username">Identifiant</Label>
+				<Input id="username" type="text" bind:value={username} required />
 			</div>
-		</form>
-	</Card.Content>
-	<Card.Footer class="flex flex-row">
-
-		<Button onclick={async () => {
+			<div class="grid gap-2">
+				<div class="flex items-center">
+					<Label for="password">Mot de passe</Label>
+				</div>
+				<Input id="password" bind:value={password} type="password" required />
+			</div>
+			<Button type="submit" class="w-full" onclick={async () => {
 			await pb.collection('user').authWithPassword(username, password).catch(() => {
 				failed = true;
 		})}
-		}>Connection</Button>
-
-		{#if failed}
-			<div class="text-red-700 h1 px-4">Echec lors de la connection</div>
-		{/if}
-	</Card.Footer>
+		}>Connexion</Button>
+		</div>
+			{#if failed}
+				<div class="mt-4 text-center text-sm text-red-400">
+					Echec lors de la connexion, veuillez vérifier vos identifiants
+				</div>
+			{/if}
+	</Card.Content>
 </Card.Root>

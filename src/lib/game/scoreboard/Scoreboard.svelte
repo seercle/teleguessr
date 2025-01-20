@@ -1,40 +1,68 @@
 <script lang="ts">
 	import ScoreSortButton from '$lib/game/scoreboard/ScoreSortButton.svelte';
-	import { type ColumnDef, getCoreRowModel, getSortedRowModel,type SortingState } from "@tanstack/table-core";
-	import * as Table from "$lib/components/ui/table/index.js";
-	import { createSvelteTable, FlexRender, renderComponent } from "$lib/components/ui/data-table/index.js";
+	import {
+		type ColumnDef,
+		getCoreRowModel,
+		getSortedRowModel,
+		type SortingState
+	} from '@tanstack/table-core';
+	import * as Table from '$lib/components/ui/table/index.js';
+	import {
+		createSvelteTable,
+		FlexRender,
+		renderComponent
+	} from '$lib/components/ui/data-table/index.js';
 	import { onMount } from 'svelte';
 	import { game } from '$lib/game/game';
-	import { pb } from "$lib/pocketbase";
+	import { pb } from '$lib/pocketbase';
 	import type { RecordModel } from 'pocketbase';
 	import { Button } from '$lib/components/ui/button';
 	import { user } from '$lib/auth/auth';
+	import { computeTotalScore } from '../result/result';
 
 	onMount(async () => {
-		data = (await pb.collection('game').getOne($game!.id, {
-			expand: 'user_via_game',
-			fields: 'expand'
-		})).expand?.user_via_game
-	})
+		data = (
+			await pb.collection('game').getOne($game!.id, {
+				expand: 'user_via_game',
+				fields: 'expand'
+			})
+		).expand?.user_via_game;
+		for (const user of data) {
+			user.total = computeTotalScore(user);
+		}
+	});
 
-	let data : RecordModel[] = $state([]);
+	let { round }: { round: number } = $props();
 
-	let columns:ColumnDef<RecordModel>[] = [
+	let columns: ColumnDef<RecordModel>[] = [
 		{
-			accessorKey: "username",
-			header: "Username",
-		},
-		{
-			accessorKey: "score",
+			accessorKey: 'username',
+			header: 'Username'
+		}
+	];
+	for (let i = 0; i < round; i++) {
+		columns.push({
+			accessorKey: `score.${i}`,
 			header: ({ column }) =>
 				renderComponent(ScoreSortButton, {
-					onclick: () => column.toggleSorting(column.getIsSorted() === "asc"),
-				}),
-		}
-	]
+					name: `Round ${i + 1}`,
+					onclick: () => column.toggleSorting(column.getIsSorted() === 'asc')
+				})
+		});
+	}
+	columns.push({
+		accessorKey: 'total',
+		header: ({ column }) =>
+			renderComponent(ScoreSortButton, {
+				name: 'Score total',
+				onclick: () => column.toggleSorting(column.getIsSorted() === 'asc')
+			})
+	});
+
+	let data: RecordModel[] = $state([]);
 
 	let sorting = $state<SortingState>([]);
-	let table = (createSvelteTable({
+	let table = createSvelteTable({
 		get data() {
 			return data;
 		},
@@ -42,7 +70,7 @@
 		getCoreRowModel: getCoreRowModel(),
 		getSortedRowModel: getSortedRowModel(),
 		onSortingChange: (updater) => {
-			if (typeof updater === "function") {
+			if (typeof updater === 'function') {
 				sorting = updater(sorting);
 			} else {
 				sorting = updater;
@@ -51,16 +79,19 @@
 		state: {
 			get sorting() {
 				return sorting;
-			},
-		},
-	}));
+			}
+		}
+	});
 </script>
 
-<Button variant="outline" onclick={() => {
-	pb.collection('user').update($user? $user.id : '', {
-		game: ''
-	})
-}}>
+<Button
+	variant="outline"
+	onclick={() => {
+		pb.collection('user').update($user ? $user.id : '', {
+			game: ''
+		});
+	}}
+>
 	Quitter la partie
 </Button>
 <div class="rounded-md border">
@@ -83,21 +114,16 @@
 		</Table.Header>
 		<Table.Body>
 			{#each table.getRowModel().rows as row (row.id)}
-				<Table.Row data-state={row.getIsSelected() && "selected"}>
+				<Table.Row data-state={row.getIsSelected() && 'selected'}>
 					{#each row.getVisibleCells() as cell (cell.id)}
 						<Table.Cell>
-							<FlexRender
-								content={cell.column.columnDef.cell}
-								context={cell.getContext()}
-							/>
+							<FlexRender content={cell.column.columnDef.cell} context={cell.getContext()} />
 						</Table.Cell>
 					{/each}
 				</Table.Row>
 			{:else}
 				<Table.Row>
-					<Table.Cell colspan={columns.length} class="h-24 text-center">
-						No results.
-					</Table.Cell>
+					<Table.Cell colspan={columns.length} class="h-24 text-center">No results.</Table.Cell>
 				</Table.Row>
 			{/each}
 		</Table.Body>
