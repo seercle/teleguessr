@@ -45,6 +45,7 @@
 	"dependencies": {
 		"@googlemaps/js-api-loader": "^1.16.8",
 		"@tanstack/table-core": "^8.20.5",
+		"dotenv": "^16.4.7",
 		"google-maps": "^4.3.3",
 		"lucide-svelte": "^0.469.0",
 		"pocketbase": "^0.25.0",

@@ -248,6 +248,7 @@
 				disableDefaultUI: true,
 				linksControl: false,
 				motionTracking: false,
+				zoomControl: false,
 				panControlOptions: {
 					position: google.maps.ControlPosition.TOP_RIGHT
 				}
@@ -326,6 +327,23 @@
 				zoom: defaultZoom
 			}
 		});
+
+		let forumLogo = document.createElement('img');
+		forumLogo.src =
+			PUBLIC_PB_URL + '/api/files/image/3j3ijzld6f2vxkt/forum_logo2048px_li9kkMtB3n.png';
+		forumLogo.style.width = '60px';
+		forumLogo.style.height = '60px';
+		forumLogo.style.marginRight = '5px';
+		gmaps.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(forumLogo);
+
+		let tgcLogo = document.createElement('img');
+		tgcLogo.src =
+			PUBLIC_PB_URL + '/api/files/image/fmzll08c6tggxdp/tgc_logo_orange_png_T6xbCyvga5.png';
+		tgcLogo.style.width = '60px';
+		tgcLogo.style.height = '60px';
+		tgcLogo.style.marginRight = '5px';
+		gmaps.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(tgcLogo);
+
 		/*
 		container = document.createElement('div');
 		gmaps.controls[google.maps.ControlPosition.LEFT_CENTER].push(container);
@@ -349,6 +367,16 @@
 				streetView.setOptions({ scrollwheel: false, panControl: false, linksControl: false });
 				break;
 		}
+
+		streetView.addListener('pov_changed', function (event) {
+			console.log('feur');
+			event.event // prevents panning with the mouse drag event
+				.stopPropagation();
+		});
+		console.log('hey');
+		gmaps.setOptions({ streetViewControl: false });
+		streetView.setOptions({ panControl: false });
+
 		startTimer(gmaps);
 	});
 </script>
