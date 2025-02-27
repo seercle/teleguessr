@@ -16,16 +16,16 @@ export function haversine(
 	const difflat = rlat2 - rlat1; // Radian difference (latitudes)
 	const difflon = (lon2 - lon1) * (Math.PI / 180); // Radian difference (longitudes)
 	return (
-		height2 -
-		height1 +
+		/*height2 -
+		height1 +*/
 		2 *
-			R *
-			Math.asin(
-				Math.sqrt(
-					Math.sin(difflat / 2) * Math.sin(difflat / 2) +
-						Math.cos(rlat1) * Math.cos(rlat2) * Math.sin(difflon / 2) * Math.sin(difflon / 2)
-				)
+		R *
+		Math.asin(
+			Math.sqrt(
+				Math.sin(difflat / 2) * Math.sin(difflat / 2) +
+					Math.cos(rlat1) * Math.cos(rlat2) * Math.sin(difflon / 2) * Math.sin(difflon / 2)
 			)
+		)
 	);
 }
 
@@ -40,10 +40,12 @@ export function score(
 ): number {
 	if (!guessed) return 0;
 	const distance = haversine(ulat, ulong, uheight, plat, plong, pheight);
-	return Math.max(
+	const distance_score = Math.max(
 		0,
-		Math.round(((get(map)!.minDistanceMeter - distance) / get(map)!.minDistanceMeter) * 5000)
+		((get(map)!.minDistanceMeter - distance) / get(map)!.minDistanceMeter) * 5000
 	);
+	const height_distance = Math.abs(uheight - pheight);
+	return Math.round(distance_score) / (1 + height_distance);
 }
 
 export function computeTotalScore(user: RecordModel): number {
