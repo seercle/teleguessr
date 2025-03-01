@@ -278,13 +278,13 @@
 			progress = 100;
 			switch ($map!.modifier) {
 				case 'normal':
-					streetView.setOptions({ zoomControl: true, panControl: true, clickToGo: true });
+					streetView.setOptions({ panControl: true, clickToGo: true });
 					break;
 				case 'nomove':
-					streetView.setOptions({ zoomControl: true, panControl: true, clickToGo: false });
+					streetView.setOptions({ panControl: true, clickToGo: false });
 					break;
 				case 'nmpz':
-					streetView.setOptions({ zoomControl: false, panControl: false, clickToGo: false });
+					streetView.setOptions({ panControl: false, clickToGo: false });
 					break;
 			}
 			startTimer(gmaps);
@@ -358,25 +358,30 @@
 
 		switch ($map!.modifier) {
 			case 'normal':
-				streetView.setOptions({ scrollwheel: true, panControl: true, linksControl: true });
+				streetView.setOptions({
+					zoomControl: false,
+					scrollwheel: true,
+					panControl: true,
+					linksControl: true
+				});
 				break;
 			case 'nomove':
-				streetView.setOptions({ scrollwheel: true, panControl: true, linksControl: false });
+				streetView.setOptions({
+					zoomControl: false,
+					scrollwheel: true,
+					panControl: true,
+					linksControl: false
+				});
 				break;
 			case 'nmpz':
-				streetView.setOptions({ scrollwheel: false, panControl: false, linksControl: false });
+				streetView.setOptions({
+					zoomControl: false,
+					scrollwheel: false,
+					panControl: false,
+					linksControl: false
+				});
 				break;
 		}
-
-		streetView.addListener('pov_changed', function (event) {
-			console.log('feur');
-			event.event // prevents panning with the mouse drag event
-				.stopPropagation();
-		});
-		console.log('hey');
-		gmaps.setOptions({ streetViewControl: false });
-		streetView.setOptions({ panControl: false });
-
 		startTimer(gmaps);
 	});
 </script>

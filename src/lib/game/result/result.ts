@@ -45,7 +45,7 @@ export function score(
 		((get(map)!.minDistanceMeter - distance) / get(map)!.minDistanceMeter) * 5000
 	);
 	const height_distance = Math.abs(uheight - pheight);
-	return Math.round(distance_score) / (1 + height_distance);
+	return Math.round(distance_score / (1 + height_distance));
 }
 
 export function computeTotalScore(user: RecordModel): number {
