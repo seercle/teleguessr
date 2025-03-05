@@ -44,6 +44,12 @@ export function score(
 		0,
 		((get(map)!.minDistanceMeter - distance) / get(map)!.minDistanceMeter) * 5000
 	);
+
+	//if pheight is not defined, return distance_score without taking the height into account
+	if (pheight < 0) {
+		return Math.round(distance_score);
+	}
+
 	const height_distance = Math.abs(uheight - pheight);
 	return Math.round(distance_score / (1 + height_distance));
 }
