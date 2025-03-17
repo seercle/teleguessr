@@ -56,7 +56,7 @@
 			fields: 'expand'
 		});
 		const panoramas: RecordModel[] = world.expand?.panoramas;
-
+		console.log(panoramas);
 		//---- retrieve info for all panoramas ------
 		for (let i = 0; i < panoramas.length; i++) {
 			const panorama = panoramas[i];
@@ -93,8 +93,8 @@
 				},
 				links: links,
 				tiles: {
-					tileSize: new google.maps.Size(2, 1),
-					worldSize: new google.maps.Size(2, 1),
+					tileSize: new google.maps.Size(1, 1),
+					worldSize: new google.maps.Size(1, 1),
 					centerHeading: panorama.centerHeading,
 					getTileUrl: () => {
 						return PUBLIC_PB_URL + '/api/files/panorama/' + panorama.id + '/' + panorama.image;
@@ -249,9 +249,13 @@
 				linksControl: false,
 				motionTracking: false,
 				zoomControl: false,
-				panControlOptions: {
+				zoomControlOptions: {
 					position: google.maps.ControlPosition.TOP_RIGHT
-				}
+				},
+				panControl: false
+				/*panControlOptions: {
+					position: google.maps.ControlPosition.TOP_RIGHT
+				}*/
 			}
 		);
 
@@ -278,13 +282,13 @@
 			progress = 100;
 			switch ($map!.modifier) {
 				case 'normal':
-					streetView.setOptions({ panControl: true, clickToGo: true });
+					streetView.setOptions({ clickToGo: true });
 					break;
 				case 'nomove':
-					streetView.setOptions({ panControl: true, clickToGo: false });
+					streetView.setOptions({ clickToGo: false });
 					break;
 				case 'nmpz':
-					streetView.setOptions({ panControl: false, clickToGo: false });
+					streetView.setOptions({ clickToGo: false });
 					break;
 			}
 			startTimer(gmaps);
@@ -361,7 +365,6 @@
 				streetView.setOptions({
 					zoomControl: false,
 					scrollwheel: true,
-					panControl: true,
 					linksControl: true
 				});
 				break;
@@ -369,7 +372,6 @@
 				streetView.setOptions({
 					zoomControl: false,
 					scrollwheel: true,
-					panControl: true,
 					linksControl: false
 				});
 				break;
@@ -377,7 +379,6 @@
 				streetView.setOptions({
 					zoomControl: false,
 					scrollwheel: false,
-					panControl: false,
 					linksControl: false
 				});
 				break;
