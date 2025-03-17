@@ -14,6 +14,9 @@ const config: Config = {
 			}
 		},
 		extend: {
+			screens: {
+				mouse: { raw: '(pointer:fine)' }
+			},
 			colors: {
 				border: 'hsl(var(--border) / <alpha-value>)',
 				input: 'hsl(var(--input) / <alpha-value>)',

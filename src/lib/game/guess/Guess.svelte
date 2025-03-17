@@ -452,7 +452,7 @@
 				document.getElementById('google-maps')?.classList.toggle('hidden');
 			}}
 			variant="outline"
-			class="z-10 h-14 w-14 bg-map bg-[length:90%] bg-center bg-no-repeat sm:hidden"
+			class="mouse:hidden z-10 h-14 w-14 bg-map bg-[length:90%] bg-center bg-no-repeat"
 		></Toggle>
 		<ResetViewButton
 			{streetView}
@@ -462,7 +462,7 @@
 	</div>
 	<div
 		id="google-maps"
-		class={'z-10 hidden rounded-lg border-[3px] border-black transition-all sm:block ' +
-			'h-[70%] w-[95%] opacity-100 sm:h-[40%] sm:w-[25%] sm:opacity-40 sm:hover:h-[70%] sm:hover:w-[50%] sm:hover:opacity-100'}
+		class={'mouse:block z-10 hidden rounded-lg border-[3px] border-black transition-all ' +
+			'mouse:h-[40%] mouse:w-[25%] mouse:opacity-40 mouse:hover:h-[70%] mouse:hover:w-[50%] mouse:hover:opacity-100 h-[70%] w-[95%] opacity-100'}
 	></div>
 </div>
