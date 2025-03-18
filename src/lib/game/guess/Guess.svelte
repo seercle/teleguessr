@@ -56,7 +56,7 @@
 			fields: 'expand'
 		});
 		const panoramas: RecordModel[] = world.expand?.panoramas;
-		console.log(panoramas);
+		//console.log(panoramas);
 		//---- retrieve info for all panoramas ------
 		for (let i = 0; i < panoramas.length; i++) {
 			const panorama = panoramas[i];
@@ -119,9 +119,15 @@
 		});
 		//create an overlay for each plane
 		const overlays: PlaneOverlay[] = [];
+		const container = document.createElement('div');
+		const box = document.createElement('div');
+		container.appendChild(box);
+		container.style.display = 'flex';
+		container.style.overflowY = 'auto';
+		container.style.flexDirection = 'column';
+		container.style.height = '90%';
+		gmaps.controls[google.maps.ControlPosition.LEFT_CENTER].push(container);
 		for (let i = 0; i < planes.length; i++) {
-			const container = document.createElement('div');
-			gmaps.controls[google.maps.ControlPosition.LEFT_CENTER].push(container);
 			const overlay = mount(PlaneOverlay, {
 				target: container,
 				props: {
@@ -146,6 +152,17 @@
 				currentPlaneOverlay = overlay;
 			}
 		}
+
+		//gmaps.controls[google.maps.ControlPosition.LEFT_CENTER].push(container);
+		mount(ResetMapButton, {
+			target: container,
+			props: {
+				gmaps,
+				center: defaultCenter,
+				zoom: defaultZoom
+			}
+		});
+
 		return overlays;
 	}
 
@@ -321,17 +338,6 @@
 			geodesic: true
 		});
 
-		let container = document.createElement('div');
-		gmaps.controls[google.maps.ControlPosition.LEFT_CENTER].push(container);
-		mount(ResetMapButton, {
-			target: container,
-			props: {
-				gmaps,
-				center: defaultCenter,
-				zoom: defaultZoom
-			}
-		});
-
 		let forumLogo = document.createElement('img');
 		forumLogo.src =
 			PUBLIC_PB_URL + '/api/files/image/3j3ijzld6f2vxkt/forum_logo2048px_li9kkMtB3n.png';
@@ -347,18 +353,6 @@
 		tgcLogo.style.height = '60px';
 		tgcLogo.style.marginRight = '5px';
 		gmaps.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(tgcLogo);
-
-		/*
-		container = document.createElement('div');
-		gmaps.controls[google.maps.ControlPosition.LEFT_CENTER].push(container);
-		mount(ResetViewButton, {
-			target: container,
-			props: {
-				streetView,
-				origin: $map!.places[round]
-			}
-		});
-		*/
 
 		switch ($map!.modifier) {
 			case 'normal':
@@ -452,7 +446,7 @@
 				document.getElementById('google-maps')?.classList.toggle('hidden');
 			}}
 			variant="outline"
-			class="mouse:hidden z-10 h-14 w-14 bg-map bg-[length:90%] bg-center bg-no-repeat"
+			class="z-10 h-14 w-14 bg-map bg-[length:90%] bg-center bg-no-repeat mouse:hidden"
 		></Toggle>
 		<ResetViewButton
 			{streetView}
@@ -462,7 +456,7 @@
 	</div>
 	<div
 		id="google-maps"
-		class={'mouse:block z-10 hidden rounded-lg border-[3px] border-black transition-all ' +
-			'mouse:h-[40%] mouse:w-[25%] mouse:opacity-40 mouse:hover:h-[70%] mouse:hover:w-[50%] mouse:hover:opacity-100 h-[70%] w-[95%] opacity-100'}
+		class={'z-10 hidden rounded-lg border-[3px] border-black transition-all mouse:block ' +
+			'h-[70%] w-[95%] opacity-100 mouse:h-[40%] mouse:w-[25%] mouse:opacity-40 mouse:hover:h-[70%] mouse:hover:w-[50%] mouse:hover:opacity-100'}
 	></div>
 </div>

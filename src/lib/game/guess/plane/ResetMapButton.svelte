@@ -12,7 +12,7 @@
 <Button
 	variant="outline"
 	size="icon"
-	class={'mx-2 my-[2px] h-16 w-16 text-lg '}
+	class={'mx-2 my-[2px] h-16 w-16 shrink-0 text-lg'}
 	onclick={() => {
 		gmaps.setCenter(center);
 		gmaps.setZoom(zoom);

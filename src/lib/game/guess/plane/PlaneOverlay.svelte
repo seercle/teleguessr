@@ -137,7 +137,7 @@
 
 <Button
 	variant="outline"
-	class={'mx-2 my-[2px] h-16 w-16 text-base ' +
+	class={'mx-2 my-[2px] h-16 w-16 shrink-0 text-base ' +
 		(shown
 			? 'bg-black text-white hover:bg-gray-800 hover:text-white'
 			: 'bg-white text-black hover:bg-gray-200')}

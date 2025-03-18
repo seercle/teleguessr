@@ -20,7 +20,7 @@ export async function subscribeGame(id: string) {
 		(e) => {
 			game.set(e.record);
 			map.set(e.record.expand!.map);
-			console.log('game changed');
+			//console.log('game changed');
 		},
 		{
 			expand: 'map'
@@ -44,7 +44,7 @@ if (get(user) != null && get(user)!.game !== '') {
 
 //if the user joined/left a game, subscribe/unsubscribe to it
 user.subscribe(async (uuser) => {
-	console.log('user changed');
+	//console.log('user changed');
 	if (uuser == null) {
 		return;
 	}
@@ -81,7 +81,7 @@ export async function prepareUsersForRound() {
 	});
 	const users = await pb.collection('user').getFullList({ filter: `game="${get(game)!.id}"` });
 	for (const user of users) {
-		console.log(user);
+		//console.log(user);
 		user.score[round] = score(
 			user.selectedLatitude,
 			user.selectedLongitude,
