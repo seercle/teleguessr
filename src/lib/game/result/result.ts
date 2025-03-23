@@ -42,7 +42,7 @@ export function score(
 	const distance = haversine(ulat, ulong, uheight, plat, plong, pheight);
 	const distance_score = Math.max(
 		0,
-		((get(map)!.minDistanceMeter - distance) / get(map)!.minDistanceMeter) * 5000
+		((get(map)!.minDfistanceMeter - distance) / get(map)!.minDistanceMeter) * 5000
 	);
 
 	//if pheight is not defined, return distance_score without taking the height into account
@@ -51,7 +51,7 @@ export function score(
 	}
 
 	const height_distance = Math.abs(uheight - pheight);
-	return Math.round(distance_score / (1 + height_distance));
+	return Math.round(distance_score / (1 + height_distance / 2));
 }
 
 export function computeTotalScore(user: RecordModel): number {
