@@ -166,9 +166,14 @@
 		return overlays;
 	}
 
-	function startTimer(gmaps: google.maps.Map) {
+	async function startTimer(gmaps: google.maps.Map) {
+		const response = await fetch('/time');
+		const string_time = await response.json();
+		const time = new Date(string_time);
+		const time_offset = new Date().getTime() - time.getTime();
 		const timer = setInterval(async () => {
-			let rt = $map!.durationSecondes * 1000 - (Date.now() - startDate.getTime());
+			let rt =
+				$map!.durationSecondes * 1000 - (new Date().getTime() - time_offset - startDate.getTime());
 			progress = Math.max(0, (rt / ($map!.durationSecondes * 1000)) * 100);
 			remainingTime = Math.ceil(rt / 1000);
 
@@ -308,7 +313,7 @@
 					streetView.setOptions({ clickToGo: false });
 					break;
 			}
-			startTimer(gmaps);
+			await startTimer(gmaps);
 		});
 
 		//if the selected location is a valid one, it means that the user has already selected a location during this round
@@ -377,7 +382,7 @@
 				});
 				break;
 		}
-		startTimer(gmaps);
+		await startTimer(gmaps);
 	});
 </script>
 
@@ -424,9 +429,12 @@
 					<AlertDialog.Action
 						onclick={async () => {
 							await prepareUsersForRound();
+							const response = await fetch('/time');
+							const string_time = await response.json();
+							const time = new Date(string_time);
 							await pb.collection('game').update($game ? $game?.id : '', {
 								round: $game?.round + 1,
-								roundStart: new Date().toJSON()
+								roundStart: time.toJSON()
 							});
 						}}>Round suivant</AlertDialog.Action
 					>

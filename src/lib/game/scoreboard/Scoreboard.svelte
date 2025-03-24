@@ -40,6 +40,14 @@
 			header: 'Username'
 		}
 	];
+	columns.push({
+		accessorKey: 'total',
+		header: ({ column }) =>
+			renderComponent(ScoreSortButton, {
+				name: 'Score total',
+				onclick: () => column.toggleSorting(column.getIsSorted() === 'asc')
+			})
+	});
 	for (let i = 0; i < round; i++) {
 		columns.push({
 			accessorKey: `score.${i}`,
@@ -50,14 +58,6 @@
 				})
 		});
 	}
-	columns.push({
-		accessorKey: 'total',
-		header: ({ column }) =>
-			renderComponent(ScoreSortButton, {
-				name: 'Score total',
-				onclick: () => column.toggleSorting(column.getIsSorted() === 'asc')
-			})
-	});
 
 	let data: RecordModel[] = $state([]);
 
