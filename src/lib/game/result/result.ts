@@ -40,18 +40,28 @@ export function score(
 ): number {
 	if (!guessed) return 0;
 	const distance = haversine(ulat, ulong, uheight, plat, plong, pheight);
-	const distance_score = Math.max(
-		0,
-		((get(map)!.minDfistanceMeter - distance) / get(map)!.minDistanceMeter) * 5000
-	);
-
-	//if pheight is not defined, return distance_score without taking the height into account
 	if (pheight < 0) {
-		return Math.round(distance_score);
-	}
+		//height is negative, use min distance meter
+		const allowedOffset = 20;
+		if (distance <= allowedOffset) {
+			return 5000;
+		}
+		const a = 1 / (allowedOffset - get(map)!.minDistanceMeter);
+		const b = -get(map)!.minDistanceMeter * a;
+		return Math.round(Math.max(0, (a * distance + b) * 5000));
+	} else {
+		//height is positive, use telecom min distance meter
+		const allowedOffset = 5;
+		const height_distance = Math.abs(uheight - pheight);
+		if (distance < allowedOffset && height_distance == 0) {
+			return 5000;
+		}
+		const a = 1 / (allowedOffset - get(map)!.minTelecomDistanceMeter);
+		const b = -get(map)!.minTelecomDistanceMeter * a;
+		const distance_score = Math.max(0, (a * distance + b) * 5000);
 
-	const height_distance = Math.abs(uheight - pheight);
-	return Math.round(distance_score / (1 + height_distance / 2));
+		return Math.round(distance_score / (1 + height_distance / 2));
+	}
 }
 
 export function computeTotalScore(user: RecordModel): number {
