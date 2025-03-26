@@ -42,7 +42,7 @@ export function score(
 	const distance = haversine(ulat, ulong, uheight, plat, plong, pheight);
 	if (pheight < 0) {
 		//height is negative, use min distance meter
-		const allowedOffset = 20;
+		const allowedOffset = 10;
 		if (distance <= allowedOffset) {
 			return 5000;
 		}
@@ -51,7 +51,7 @@ export function score(
 		return Math.round(Math.max(0, (a * distance + b) * 5000));
 	} else {
 		//height is positive, use telecom min distance meter
-		const allowedOffset = 5;
+		const allowedOffset = 2;
 		const height_distance = Math.abs(uheight - pheight);
 		if (distance < allowedOffset && height_distance == 0) {
 			return 5000;
