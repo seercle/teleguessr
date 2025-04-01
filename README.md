@@ -1,38 +1,26 @@
-# sv
+# Teleguessr
+## A Geoguessr clone for Telecom Paris
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
-
-## Creating a project
-
-If you're seeing this, you've probably already done this step. Congrats!
-
+### Backend
+The backend is a pocketbase app. We provide a pocketbase app exemple for developpement in the `backend` directory. You can run it with the following command:
 ```bash
-# create a new project in the current directory
-npx sv create
-
-# create a new project in my-app
-npx sv create my-app
+cd backend
+./pocketbase serve -http://localhost:8080
 ```
+The credentials are:
+- username: `myadmin@myemail.com`
+- password: `mypassword`
 
-## Developing
+You will need to set the floors plan images in the plane collection, then create your panoramas, link them together, create a map, a world, and finally a game.
+You also need to create users
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
+### Frontend
+The frontend is a Svelte app.
+You first need to provide the url of the pocketbase and a google maps api key in the `frontend/.env` file.
+You can then run it with the following command:
 ```bash
+cd frontend
+npm install
 npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
 ```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+/!\ .env variables are fed to the app at build time, so you need to rebuild the app after changing them
